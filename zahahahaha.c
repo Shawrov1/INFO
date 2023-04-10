@@ -139,6 +139,20 @@ for (int i = WIN_LENGTH - 1; i < lign; i++) {
 }return 0;}
 
 
+void gravite(int tableau[lign][colo]){
+    for(int k=0;k<(lign-1);k++){
+        for(int i=0;i<colo;i++){
+            for(int f=lign-1;f!=0;f--){
+                if(tableau[f][i]==32 && tableau[f-1][i]!=32){
+                tableau[f][i] = tableau[f-1][i];
+                tableau[f-1][i]=32;}
+        }
+    }
+  }
+}
+
+
+
 int main(){
     char jeton = 'X';
     int caca=10;
@@ -169,19 +183,21 @@ int main(){
     }*/
         while (!gagnant) {
         // Afficher la grille actuelle
-        afficher_grille(tableau);
+        afficher_grille(tableau);printf("1");
         
         // Demander au joueur de choisir une colonne
         printf("Joueur %c, choisissez une colonne (1-%d) : ", jeton, colo);
         scanf("%d", &jeu);
         jeu--;  // ajuster l'indice de la colonne
-        afficher_grille(tableau);
+        afficher_grille(tableau);printf("2");
 
         // Jouer le coup et vérifier s'il y a un gagnant
         if (jouer_coup(tableau, jeu, jeton)) {
-            afficher_grille(tableau);
-            tourner(tableau,0,1,3,3);
-            afficher_grille(tableau);
+            afficher_grille(tableau);printf("3");
+            tourner(tableau,1,0,3,6);
+            afficher_grille(tableau);printf("4");
+            gravite(tableau);
+            afficher_grille(tableau);printf("5");
             gagnant = verifier_gagnant(tableau, jeton);
         }
         printf("\n");
@@ -191,12 +207,7 @@ int main(){
         jeton = jeton == 'X' ? 'O' : 'X';
     }
     
-    
-
-    
-
-    
-  }
+}
 
 
   
