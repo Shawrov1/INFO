@@ -1,29 +1,30 @@
 #include <stdio.h>
 
-#define LIGNES 6
-#define COLONNES 7
+#define LIGNES 9
+#define COLONNES 8
 
-void display_board(char board[][COLONNES]);
-int check_win(char board[][COLONNES], char player);
-void play(char board[][COLONNES], char player);
+void affichage_plateau(char plateau[][COLONNES]);
+int check_win(char plateau[][COLONNES], char player);
+void play(char plateau[][COLONNES], char player);
+
 
 int main() {
-    char board[LIGNES][COLONNES];
+    char plateau[LIGNES][COLONNES];
     char player = 'X';
     int winner = 0;
   
   
-    // Initialize the board
+    // Initialisation du plateau
     for (int i = 0; i < LIGNES; i++) {
         for (int j = 0; j < COLONNES; j++) {
-            board[i][j] = ' ';
+            plateau[i][j] = ' ';
         }
     }
 
     while (!winner) {
-        display_board(board);
-        play(board, player);
-        winner = check_win(board, player);
+        affichage_plateau(plateau);
+        play(plateau, player);
+        winner = check_win(plateau, player);
         if (!winner) {
             // Switch to the other player
             player = (player == 'X') ? 'O' : 'X';
@@ -31,33 +32,31 @@ int main() {
     }
 
     printf("Player %c wins!\n", player);
-    display_board(board);
-
-
+    affichage_plateau(plateau);
 
     return 0;
 }
 
-void display_board(char board[][COLONNES]) {
+void affichage_plateau(char plateau[][COLONNES]) {
   
     printf("\n");
-    for (int i = 0; i < LIGNES; i++) {
-        printf("|");
-        for (int j = 0; j < COLONNES; j++) {
-            printf(" %c |", board[i][j]);
+   for (int i = 0; i < LIGNES; i++) {
+         printf("|");
+          for (int j = 0; j < COLONNES; j++) {
+             printf(" %c |", plateau[i][j]);
         }
-        printf("\n");
+         printf("\n");
     }
-    printf("-----------------------------\n");
-    printf("  1   2   3   4   5   6   7\n");
+    printf("---------------------------------\n");
+    printf("  1   2   3   4   5   6   7   8\n\n");
 }
 
-int check_win(char board[][COLONNES], char player) {
+int check_win(char plateau[][COLONNES], char player) {
     // Check for horizontal wins
     for (int i = 0; i < LIGNES; i++) {
         for (int j = 0; j < COLONNES - 3; j++) {
-            if (board[i][j] == player && board[i][j+1] == player &&
-                board[i][j+2] == player && board[i][j+3] == player) {
+            if (plateau[i][j] == player && plateau[i][j+1] == player &&
+                plateau[i][j+2] == player && plateau[i][j+3] == player) {
                 return 1;
             }
         }
@@ -66,8 +65,8 @@ int check_win(char board[][COLONNES], char player) {
     // Check for vertical wins
     for (int i = 0; i < LIGNES - 3; i++) {
         for (int j = 0; j < COLONNES; j++) {
-            if (board[i][j] == player && board[i+1][j] == player &&
-                board[i+2][j] == player && board[i+3][j] == player) {
+            if (plateau[i][j] == player && plateau[i+1][j] == player &&
+                plateau[i+2][j] == player && plateau[i+3][j] == player) {
                 return 1;
             }
         }
@@ -76,8 +75,8 @@ int check_win(char board[][COLONNES], char player) {
     // Check for diagonal wins (top-left to bottom-right)
     for (int i = 0; i < LIGNES - 3; i++) {
         for (int j = 0; j < COLONNES - 3; j++) {
-            if (board[i][j] == player && board[i+1][j+1] == player &&
-                board[i+2][j+2] == player && board[i+3][j+3] == player) {
+            if (plateau[i][j] == player && plateau[i+1][j+1] == player &&
+                plateau[i+2][j+2] == player && plateau[i+3][j+3] == player) {
                 return 1;
             }
         }
@@ -86,8 +85,8 @@ int check_win(char board[][COLONNES], char player) {
     // Check for diagonal wins (bottom-left to top-right)
     for (int i = 3; i < LIGNES; i++) {
         for (int j = 0; j < COLONNES - 3; j++) {
-            if (board[i][j] == player && board[i-1][j+1] == player &&
-                board[i-2][j+2] == player && board[i-3][j+3] == player) {
+            if (plateau[i][j] == player && plateau[i-1][j+1] == player &&
+                plateau[i-2][j+2] == player && plateau[i-3][j+3] == player) {
                 return 1;
             }
         }
@@ -97,7 +96,7 @@ int check_win(char board[][COLONNES], char player) {
     int tie = 1;
     for (int i = 0; i < LIGNES; i++) {
         for (int j = 0; j < COLONNES; j++) {
-            if (board[i][j] == ' ') {
+            if (plateau[i][j] == ' ') {
                 tie = 0;
                 break;
             }
@@ -105,7 +104,7 @@ int check_win(char board[][COLONNES], char player) {
     }
     if (tie) {
         printf("The game is tied!\n");
-        display_board(board);
+        affichage_plateau(plateau);
         return 1;
     }
 
@@ -113,21 +112,47 @@ int check_win(char board[][COLONNES], char player) {
 }
 
 
-void play(char board[][COLONNES], char player) {
-    int column;
-    do {
-        printf("Player %c, enter a column (1-7): ", player);
-        scanf("%d", &column);
-        column--;  // Convert to zero-based index
-    } while (column < 0 || column >= COLONNES || board[0][column] != ' ');
 
-    // Find the first empty cell in the chosen column
-    int row = LIGNES - 1;
-    while (board[row][column] != ' ') {
-        row--;
+
+void play(char plateau[][COLONNES], char player) {
+
+  
+    // do {
+    //     printf("Joueur %c, entrez une colonne (1-8): \n", player);
+    //     scanf("%d", &colonne);
+    //     colonne--;
+    //   // Convert to zero-based index
+    // } while (colonne < 0 || colonne >= COLONNES || plateau[0][colonne] != ' ');
+
+      int colonne;
+      int entier;
+      int liste[] = { 1, 2, 3, 4, 5, 6 ,7 ,8 };
+      
+      do {
+        entier = 1;
+        colonne = 0;
+        printf("Joueur %c, entrez une colonne (1-8): \n", player);
+        scanf("%d", &colonne);
+        while(getchar() != '\n');
+        
+        for (int i = 0; i < 8; i++) {
+          if(colonne == liste[i]){
+            entier = 0;
+            break ;
+          }
+        } 
+        colonne --;
+      }while(entier);
+
+
+  
+    // Gravité
+    int ligne = LIGNES - 1;
+    while (plateau[ligne][colonne] != ' ') {
+        ligne--;
     }
 
     // Place the player's piece in the chosen cell
-    board[row][column] = player;
+    plateau[ligne][colonne] = player;
 }
  
