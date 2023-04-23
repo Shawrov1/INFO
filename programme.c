@@ -1,22 +1,21 @@
 #include <stdio.h>
 
-#define LIGNES 9
-#define COLONNES 8
+#define LINES 9
+#define COLUMNS 8
 
-void affichage_plateau(char plateau[][COLONNES]);
-int check_win(char plateau[][COLONNES], char player);
-void play(char plateau[][COLONNES], char player);
-
+void affichage_plateau(char plateau[][COLUMNS]);
+int check_win(char plateau[][COLUMNS], char player);
+void play(char plateau[][COLUMNS], char player);
 
 int main() {
-    char plateau[LIGNES][COLONNES];
+    char plateau[LINES][COLUMNS];
     char player = 'X';
     int winner = 0;
   
   
     // Initialisation du plateau
-    for (int i = 0; i < LIGNES; i++) {
-        for (int j = 0; j < COLONNES; j++) {
+    for (int i = 0; i < LINES; i++) {
+        for (int j = 0; j < COLUMNS; j++) {
             plateau[i][j] = ' ';
         }
     }
@@ -37,12 +36,12 @@ int main() {
     return 0;
 }
 
-void affichage_plateau(char plateau[][COLONNES]) {
+void affichage_plateau(char plateau[][COLUMNS]) {
   
     printf("\n");
-   for (int i = 0; i < LIGNES; i++) {
+   for (int i = 0; i < LINES; i++) {
          printf("|");
-          for (int j = 0; j < COLONNES; j++) {
+          for (int j = 0; j < COLUMNS; j++) {
              printf(" %c |", plateau[i][j]);
         }
          printf("\n");
@@ -51,10 +50,10 @@ void affichage_plateau(char plateau[][COLONNES]) {
     printf("  1   2   3   4   5   6   7   8\n\n");
 }
 
-int check_win(char plateau[][COLONNES], char player) {
+int check_win(char plateau[][COLUMNS], char player) {
     // Check for horizontal wins
-    for (int i = 0; i < LIGNES; i++) {
-        for (int j = 0; j < COLONNES - 3; j++) {
+    for (int i = 0; i < LINES; i++) {
+        for (int j = 0; j < COLUMNS - 3; j++) {
             if (plateau[i][j] == player && plateau[i][j+1] == player &&
                 plateau[i][j+2] == player && plateau[i][j+3] == player) {
                 return 1;
@@ -63,8 +62,8 @@ int check_win(char plateau[][COLONNES], char player) {
     }
 
     // Check for vertical wins
-    for (int i = 0; i < LIGNES - 3; i++) {
-        for (int j = 0; j < COLONNES; j++) {
+    for (int i = 0; i < LINES - 3; i++) {
+        for (int j = 0; j < COLUMNS; j++) {
             if (plateau[i][j] == player && plateau[i+1][j] == player &&
                 plateau[i+2][j] == player && plateau[i+3][j] == player) {
                 return 1;
@@ -73,8 +72,8 @@ int check_win(char plateau[][COLONNES], char player) {
     }
 
     // Check for diagonal wins (top-left to bottom-right)
-    for (int i = 0; i < LIGNES - 3; i++) {
-        for (int j = 0; j < COLONNES - 3; j++) {
+    for (int i = 0; i < LINES - 3; i++) {
+        for (int j = 0; j < COLUMNS - 3; j++) {
             if (plateau[i][j] == player && plateau[i+1][j+1] == player &&
                 plateau[i+2][j+2] == player && plateau[i+3][j+3] == player) {
                 return 1;
@@ -83,8 +82,8 @@ int check_win(char plateau[][COLONNES], char player) {
     }
 
     // Check for diagonal wins (bottom-left to top-right)
-    for (int i = 3; i < LIGNES; i++) {
-        for (int j = 0; j < COLONNES - 3; j++) {
+    for (int i = 3; i < LINES; i++) {
+        for (int j = 0; j < COLUMNS - 3; j++) {
             if (plateau[i][j] == player && plateau[i-1][j+1] == player &&
                 plateau[i-2][j+2] == player && plateau[i-3][j+3] == player) {
                 return 1;
@@ -94,8 +93,8 @@ int check_win(char plateau[][COLONNES], char player) {
 
     // Check for a tie
     int tie = 1;
-    for (int i = 0; i < LIGNES; i++) {
-        for (int j = 0; j < COLONNES; j++) {
+    for (int i = 0; i < LINES; i++) {
+        for (int j = 0; j < COLUMNS; j++) {
             if (plateau[i][j] == ' ') {
                 tie = 0;
                 break;
@@ -114,7 +113,7 @@ int check_win(char plateau[][COLONNES], char player) {
 
 
 
-void play(char plateau[][COLONNES], char player) {
+void play(char plateau[][COLUMNS], char player) {
 
   
     // do {
@@ -122,7 +121,7 @@ void play(char plateau[][COLONNES], char player) {
     //     scanf("%d", &colonne);
     //     colonne--;
     //   // Convert to zero-based index
-    // } while (colonne < 0 || colonne >= COLONNES || plateau[0][colonne] != ' ');
+    // } while (colonne < 0 || colonne >= COLUMNS || plateau[0][colonne] != ' ');
 
       int colonne;
       int entier;
