@@ -7,10 +7,8 @@ int colo;
 int lign;
 #define WIN_LENGTH 5
 
-int tourner(int tableau[lign][colo],int x,int y,int rota,int xx){  
-
-
-    //création tableau fils "caa" carré de taille xx à partir des coordonnés (x,y)
+//xx=dim
+int verif_tourner(int tableau[lign][colo],int x,int y,int xx){
     int caa[xx][xx];
     int *ptr = &tableau[y][x];
 
@@ -33,6 +31,23 @@ int tourner(int tableau[lign][colo],int x,int y,int rota,int xx){
     if(tot==total){
         return 0;
     }
+    else{return 1;}
+}
+// xx=dim
+void tourner(int tableau[lign][colo],int x,int y,int rota,int xx){  
+
+
+    //création tableau fils "caa" carré de taille xx à partir des coordonnés (x,y)
+    int caa[xx][xx];
+    int *ptr = &tableau[y][x];
+
+
+  for(int i=0; i<xx; i++){
+    for(int j=0; j<xx; j++){
+      caa[i][j] = *(ptr + i*colo + j);
+    }
+  }
+    
   //1= rotation à droite, autre= rotation à gauche
   if(rota==1){
     //rotation 90° vers la droite
@@ -66,7 +81,6 @@ int tourner(int tableau[lign][colo],int x,int y,int rota,int xx){
   }
 }
   
-return 1;
 }
 
 
@@ -81,8 +95,8 @@ void afficher_grille(int grille[lign][colo]) {
         printw("|\n");
     }
     if(colo==8){
-        printw("   _________________________________\n");
-        printw("     1   2   3   4   5   6   7   8  \n"); 
+        printw("_________________________________\n");
+        printw("  1   2   3   4   5   6   7   8  \n"); 
     }
     else{
         printw("_________________________________________\n");
@@ -212,6 +226,7 @@ void creation_tableau_jeton(int cotab_jeton[colo]){
     for(int i=0;i<colo;i++){
         cotab_jeton[i]=' ';
     }
+    cotab_jeton[0]='^';
 }
 void affichage_tableau_jeton(int cotab_jeton[colo]){
     for(int i=0;i<colo;i++){
@@ -219,7 +234,7 @@ void affichage_tableau_jeton(int cotab_jeton[colo]){
     }
     refresh();
 }
-void deplacement_jeton(int cotab_jeton[colo],int ch_jeton,int *co_jeton){
+void deplacement_jeton(int cotab_jeton[colo],int ch_jeton,int *co_jeton,int*play_jeton){
     switch (ch_jeton)
     {
     case KEY_LEFT:
@@ -236,10 +251,58 @@ void deplacement_jeton(int cotab_jeton[colo],int ch_jeton,int *co_jeton){
             cotab_jeton[(*co_jeton)]='^';
         }
         break;
+    case '\n':
+        (*play_jeton)--;
     }
     clear();
 
     //affichage_tableau_jeton(cotab_jeton);
+}
+
+void deplacement_rota(int tab[lign][colo],int ch_rota,int *x,int *y,int *m,int dim){
+    switch(ch_rota) {
+            case KEY_LEFT:
+                if ((*y) > 0) {
+                    (*y)--;
+                }
+                break;
+            case KEY_RIGHT:
+                if ((*y) < colo-dim) {
+                    (*y)++;
+                }
+                break;
+            case KEY_UP:
+                if ((*x) > 0) {
+                    (*x)--;
+                }
+                break;
+            case KEY_DOWN:
+                if ((*x) < lign-dim) {
+                    (*x)++;
+                }
+                break;
+
+            case '\n':
+                (*m)--;
+                break;
+        }
+        clear();
+}
+
+void affichage_rota(int tab[lign][colo],int coo_x,int coo_y,int dim){
+    for (int i = 0; i < lign; i++) {
+    //printw("%d  ",i+1);
+        for (int j = 0; j < colo; j++) {
+            if(i>=coo_x && i<coo_x+dim && j>=coo_y && j<coo_y+dim){
+                printw("|");
+                attron(A_REVERSE);
+                printw(" %c ",tab[i][j]);
+                attroff(A_REVERSE);
+            }
+            else{printw("| %c ", tab[i][j]);}
+        }
+    printw("|\n");
+    } 
 }
 
 
@@ -289,9 +352,10 @@ int main(){
         int play_jeton=1;
         int co_jeton=0;
         int cotab_jeton[colo];
+        int m=1;
 
         creation_tableau_jeton(cotab_jeton);
-        cotab_jeton[0]='^';
+        
 
         clear();
         // Afficher la grille actuelle
@@ -314,7 +378,23 @@ int main(){
             printw("\n");
             ch_jeton= getch();
 
-            deplacement_jeton(cotab_jeton,ch_jeton,&co_jeton);
+            deplacement_jeton(cotab_jeton,ch_jeton,&co_jeton,&play_jeton);
+        }
+
+        if(jouer_coup(tableau,co_jeton,jeton)){
+            //afficher_grille(tableau);
+    
+
+
+            while(m){
+                affichage_rota(tableau,coo_x,coo_y,dim);
+                printw("\n");
+                int ch_rota= getch();
+                deplacement_rota(tableau,ch_rota,&coo_x,&coo_y,&m,dim);
+            }
+
+
+            gagnant = verifier_gagnant(tableau, jeton);
         }
         
         /*
@@ -367,7 +447,7 @@ int main(){
 
         printf("\n");
         printf("\n");
-        printf("\n");
+        printf("\n");*/
         // Changer le jeton pour le prochain joueur
         if(nb_joueur==2){
             if(jeton=='X'){jeton='O';}
@@ -376,7 +456,9 @@ int main(){
             if(jeton=='X'){jeton='+';}
             else if(jeton=='+'){jeton='O';}
             else {jeton='X';}
-        }*/
+        }
     }
+    endwin();
+    exit(0);
     
 }
