@@ -7,7 +7,7 @@ int colo;
 int lign;
 #define WIN_LENGTH 5
 
-//xx=dim
+//xx=dim returne 1 si ça marhce
 int verif_tourner(int tableau[lign][colo],int x,int y,int xx){
     int caa[xx][xx];
     int *ptr = &tableau[y][x];
@@ -259,7 +259,7 @@ void deplacement_jeton(int cotab_jeton[colo],int ch_jeton,int *co_jeton,int*play
     //affichage_tableau_jeton(cotab_jeton);
 }
 
-void deplacement_rota(int tab[lign][colo],int ch_rota,int *x,int *y,int *m,int dim){
+void deplacement_rota(int tab[lign][colo],int ch_rota,int *x,int *y,int *m,int dim,int coo_x,int coo_y){
     switch(ch_rota) {
             case KEY_LEFT:
                 if ((*y) > 0) {
@@ -283,13 +283,16 @@ void deplacement_rota(int tab[lign][colo],int ch_rota,int *x,int *y,int *m,int d
                 break;
 
             case '\n':
-                (*m)--;
-                break;
+                if(verif_tourner(tab,coo_x,coo_y,dim)){
+                    (*m)--;
+                    break;
+                }
         }
         clear();
 }
 
 void affichage_rota(int tab[lign][colo],int coo_x,int coo_y,int dim){
+    printw("\n");
     for (int i = 0; i < lign; i++) {
     //printw("%d  ",i+1);
         for (int j = 0; j < colo; j++) {
@@ -303,6 +306,38 @@ void affichage_rota(int tab[lign][colo],int coo_x,int coo_y,int dim){
         }
     printw("|\n");
     } 
+}
+
+void creation_choix_rota(int tab_choix_rota[1]){
+    tab_choix_rota[0]='>';
+    tab_choix_rota[1]=' ';
+}
+
+void deplacement_choix_rota(int tab_choix_rota[1],int ch_choix_rota,int *coo_choix_rota,int *play_choix_rota){
+    switch (ch_choix_rota){
+        case KEY_UP:
+            if((*coo_choix_rota)>0){
+                tab_choix_rota[0]='>';
+                tab_choix_rota[1]=' ';
+                (*coo_choix_rota)--;
+            }
+            break;
+        case KEY_DOWN:
+            if((*coo_choix_rota)<1){
+                tab_choix_rota[0]=' ';
+                tab_choix_rota[1]='>';
+                (*coo_choix_rota)++;
+            }
+            break;
+        case '\n':
+            (*play_choix_rota)--;
+            break;
+    }
+    clear();
+}
+
+void affichage_choix_rota(int tab_choix_rota[1]){
+    printw("%c à gauche\n%c à droite",tab_choix_rota[0],tab_choix_rota[1]);
 }
 
 
@@ -349,12 +384,18 @@ int main(){
 
     while (!gagnant) {
 
-        int play_jeton=1;
         int co_jeton=0;
         int cotab_jeton[colo];
+        
+        int play_jeton=1;
         int m=1;
+        int play_choix_rota=1;
+        int coo_choix_rota =0;
 
+
+        int tab_choix_rota[1];
         creation_tableau_jeton(cotab_jeton);
+        creation_choix_rota(tab_choix_rota);
         
 
         clear();
@@ -389,9 +430,29 @@ int main(){
             while(m){
                 affichage_rota(tableau,coo_x,coo_y,dim);
                 printw("\n");
+                printw("%d %d",coo_x,coo_y);
+                printw("\nvous avez obtenu la dimension %d, choisissez où vous voulez l'appliquer.",dim);
+                printw("\n");
                 int ch_rota= getch();
-                deplacement_rota(tableau,ch_rota,&coo_x,&coo_y,&m,dim);
+
+                //x,y inversé
+                deplacement_rota(tableau,ch_rota,&coo_x,&coo_y,&m,dim,coo_y,coo_x);
             }
+
+            while(play_choix_rota){
+                affichage_rota(tableau,coo_x,coo_y,dim);
+                printw("\n");
+                affichage_choix_rota(tab_choix_rota);
+                printw("\n");
+                int ch_choix_rota=getch();
+                deplacement_choix_rota(tab_choix_rota,ch_choix_rota,&coo_choix_rota,&play_choix_rota);
+
+            }
+            
+            // x,y inversé
+            tourner(tableau,coo_y,coo_x,coo_choix_rota,dim);
+            gravite(tableau);
+
 
 
             gagnant = verifier_gagnant(tableau, jeton);
@@ -448,6 +509,7 @@ int main(){
         printf("\n");
         printf("\n");
         printf("\n");*/
+
         // Changer le jeton pour le prochain joueur
         if(nb_joueur==2){
             if(jeton=='X'){jeton='O';}
