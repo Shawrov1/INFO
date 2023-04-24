@@ -416,6 +416,7 @@ int main(){
         while(play_jeton){
             afficher_grille(tableau);
             affichage_tableau_jeton(cotab_jeton);
+            printw("\njoueur %c, à vous de jouer",jeton);
             printw("\n");
             ch_jeton= getch();
 
@@ -430,7 +431,7 @@ int main(){
             while(m){
                 affichage_rota(tableau,coo_x,coo_y,dim);
                 printw("\n");
-                printw("%d %d",coo_x,coo_y);
+                printw("%d %d",coo_y,coo_x);
                 printw("\nvous avez obtenu la dimension %d, choisissez où vous voulez l'appliquer.",dim);
                 printw("\n");
                 int ch_rota= getch();
@@ -456,6 +457,9 @@ int main(){
 
 
             gagnant = verifier_gagnant(tableau, jeton);
+        }
+        else{
+            continue;
         }
         
         /*
