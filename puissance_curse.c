@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <ncurses.h>
+#include <unistd.h>
 
 int colo;
 int lign;
@@ -126,11 +127,18 @@ int jouer_coup(int grille[lign][colo], int colonne, char jeton) {
     }
 
     for (int i = 0; i < lign; i++) {
-        if (grille[i][colonne] == ' ' && grille[i+1][colonne]!= ' ') {
+        grille[i][colonne]= jeton;
+        usleep(100000);
+        clear();
+        afficher_grille(grille);
+        grille[i][colonne]= ' ';
+        if(grille[i][colonne] == ' ' && grille[i+1][colonne]!= ' ') {
             grille[i][colonne] = jeton;
+            clear();
             return 1;
         }
     }
+    
     printf("La colonne est pleine.\n");
     return 0;
 }
@@ -206,6 +214,10 @@ void gravite(int tableau[lign][colo]){
                 tableau[f-1][i]=32;}
         }
     }
+    
+    clear();
+    afficher_grille(tableau);
+    usleep(100000);
   }
 }
 
