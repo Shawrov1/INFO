@@ -121,7 +121,7 @@ void afficher_grille(int grille[lign][colo]) {
 //placer le coup joué
 int jouer_coup(int grille[lign][colo], int colonne, char jeton) {
     //vérifier si la colonne n'est pas obstrué par un bloc
-    if(grille[0][colonne] =='#'){
+    if(grille[0][colonne]!=' '){
         printf("la colonne est pleine.\n");
         return 0;
     }
@@ -139,7 +139,7 @@ int jouer_coup(int grille[lign][colo], int colonne, char jeton) {
         }
     }
     
-    printf("La colonne est pleine.\n");
+    //printf("La colonne est pleine.\n");
     return 0;
 }
 
@@ -238,9 +238,10 @@ void creation_tableau_jeton(int cotab_jeton[colo]){
     for(int i=0;i<colo;i++){
         cotab_jeton[i]=' ';
     }
-    cotab_jeton[0]='^';
+    //cotab_jeton[0]='^';
 }
-void affichage_tableau_jeton(int cotab_jeton[colo]){
+void affichage_tableau_jeton(int cotab_jeton[colo], int co_jeton){
+    cotab_jeton[co_jeton]='^';
     for(int i=0;i<colo;i++){
         printw("  %c ",cotab_jeton[i]);
     }
@@ -357,7 +358,7 @@ void affichage_choix_rota(int tab_choix_rota[1]){
 int main(){
     char jeton = 'X';
     int taille_grille =1;
-    int nb_joueur = 2;
+    int nb_joueur = 3;
     int ch_jeton;
 
     initscr();
@@ -376,6 +377,7 @@ int main(){
     int tableau[lign][colo];
     creation_tableau(tableau);
     afficher_grille(tableau);
+    int co_jeton=0;
 
 
     /*while (caca)
@@ -396,7 +398,7 @@ int main(){
 
     while (!gagnant) {
 
-        int co_jeton=0;
+        
         int cotab_jeton[colo];
         
         int play_jeton=1;
@@ -427,7 +429,7 @@ int main(){
 
         while(play_jeton){
             afficher_grille(tableau);
-            affichage_tableau_jeton(cotab_jeton);
+            affichage_tableau_jeton(cotab_jeton,co_jeton);
             printw("\njoueur %c, à vous de jouer",jeton);
             printw("\n");
             ch_jeton= getch();
