@@ -4,25 +4,29 @@
 
 int main(int argc, char argv)
 {
-  /* NCURSES START "/
+  /* NCURSES START */
 
   initscr();
   noecho();
   cbreak();
 
-  // get screen size
+  // taille ecran
 
   int yMax, xMax; getmaxyx(stdscr, yMax, xMax);
 
-  // create a window for our input WINDOW * menuwin = newwin (6, xMax-12, yMax-8, 5); box (menuwin, 0, 0); wrefresh(menuwin);
+  // creer une fenetre en terminale
 
+  WINDOW * menuwin = newwin (6, xMax-12, yMax-9, 5);
+  box (menuwin, 0, 0);
+  refresh();
+  wrefresh(menuwin);
   refresh();
 
-  // makes it so we can use arrow keys
+  // fleche fonctionnel
 
   keypad (menuwin, true);
 
-  string choices[3] = {"Jouer", "Continuer", "Quitter"};
+  char choices[][20] = {"Jouer", "Continuer", "Quitter"};
 
   int choice;
 
@@ -31,11 +35,14 @@ int main(int argc, char argv)
   while(1)
   {
     for (int i = 0; i < 3; i++){
-      if(i == highlight)
-        wattron (menuwin, A_REVERSE);          mvwprintw(menuwin, i+1, 1, choices[i].c_str());
-        wattroff (menuwin, A_REVERSE);
+        mvwprintw(menuwin, i+1, 10, "%s", choices[i]);
+        if(i == highlight)
+            wattron (menuwin, A_REVERSE);
+            wattroff (menuwin, A_REVERSE);
+        wrefresh(menuwin);
+       
     }
-  
+    
     choice = wgetch(menuwin);
 
     switch(choice)
@@ -59,8 +66,6 @@ int main(int argc, char argv)
 
   }
 
-
-  // make sure program waits before exiting...
 
   getch();
   endwin();
