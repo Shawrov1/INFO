@@ -30,16 +30,18 @@ int main(int argc, char argv)
 
   int choice;
 
-  int highlight = 8;
+  int highlight = 3;
 
   while(1)
   {
     for (int i = 0; i < 3; i++){
+      
+      if(i == highlight)
         mvwprintw(menuwin, i+1, 10, "%s", choices[i]);
-        if(i == highlight)
-            wattron (menuwin, A_REVERSE);
-            wattroff (menuwin, A_REVERSE);
-        wrefresh(menuwin);
+        wattron (menuwin, A_REVERSE);
+        wattroff (menuwin, A_REVERSE);
+      wrefresh(menuwin);
+      
        
     }
     
@@ -58,8 +60,10 @@ int main(int argc, char argv)
         if(highlight == 3) 
           highlight= 2;
         break;
+
       default:
         break;
+
     }
     if (choice == 10)
       break;
