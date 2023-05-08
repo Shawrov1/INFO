@@ -30,19 +30,21 @@ int main(int argc, char argv)
 
   int choice;
 
-  int highlight = 3;
-
+  int highlight = 0;
+  
   while(1)
   {
     for (int i = 0; i < 3; i++){
-      
-      if(i == highlight)
-        mvwprintw(menuwin, i+1, 10, "%s", choices[i]);
+      if(i == highlight){
         wattron (menuwin, A_REVERSE);
+        mvwprintw(menuwin, i+1, 10, "%s", choices[i]);
         wattroff (menuwin, A_REVERSE);
-      wrefresh(menuwin);
+      }
       
-       
+      else {
+      mvwprintw(menuwin, i+1, 10, "%s", choices[i]);
+      }
+
     }
     
     choice = wgetch(menuwin);
@@ -78,3 +80,4 @@ int main(int argc, char argv)
 
   return 0;
 }
+
