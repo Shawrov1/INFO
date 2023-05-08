@@ -4,7 +4,7 @@
 
 int main(int argc, char argv)
 {
-  /* NCURSES START "/
+  /* NCURSES START */
 
   initscr();
   noecho();
@@ -14,34 +14,42 @@ int main(int argc, char argv)
 
   int yMax, xMax; getmaxyx(stdscr, yMax, xMax);
 
-  // creation fenetre
-  
-  *menuwin = newwin (6, xMax-12, yMax-8, 5);
+  // creer une fenetre en terminale
+
+  WINDOW * menuwin = newwin (6, xMax-12, yMax-9, 5);
   box (menuwin, 0, 0);
+  refresh();
   wrefresh(menuwin);
   refresh();
 
-  // définition des fleches
+  // fleche fonctionnel
 
   keypad (menuwin, true);
 
-  string choices[3] = {"8x6", "10x8"};
+  char choices[][20] = {"8x6", "10x8"};
 
   int choice;
 
-  int highlight = 8;
+  int highlight = 0;
+
+  
 
   while(1)
   {
-    printw("Quelle taille voulez vous jouer ?");
-    
     for (int i = 0; i < 2; i++){
-      if(i == highlight)
-        mvwprintw(menuwin, i+1, 1, choices[i].c_str());
+      if(i == highlight){
         wattron (menuwin, A_REVERSE);
+        mvwprintw(menuwin, i+1, 10, "%s", choices[i]);
         wattroff (menuwin, A_REVERSE);
+      }
+      
+      else {
+      mvwprintw(menuwin, 0, 30, "Quelle taille vous voulez jouer ?");
+      mvwprintw(menuwin, i+1, 10, "%s", choices[i]);
+      }
+
     }
-  
+    
     choice = wgetch(menuwin);
 
     switch(choice)
@@ -54,11 +62,13 @@ int main(int argc, char argv)
 
       case KEY_DOWN:
         highlight++;
-        if(highlight == 3) 
-          highlight= 2;
+        if(highlight == 2) 
+          highlight= 1;
         break;
+
       default:
         break;
+
     }
     if (choice == 10)
       break;
@@ -66,12 +76,10 @@ int main(int argc, char argv)
   }
 
 
-  // temps d'attente
-
   getch();
   endwin();
 
-  / NCURSES END */
+  /* NCURSES END */
 
   return 0;
 }
