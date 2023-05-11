@@ -93,17 +93,23 @@ void afficher_grille(int grille[lign][colo]) {
     for (int i = 0; i < lign; i++) {
         //printw("%d  ",i+1);
         for (int j = 0; j < colo; j++) {
-            wprintw(stdscr,"| %lc ", grille[i][j]);
+            if(grille[i][j]==' '){
+                printw("|  ");
+            }
+            else{
+                wprintw(stdscr,"|%lc", grille[i][j]);
+            }
+            
         }
         printw("|\n");
     }
     if(colo==8){
-        printw("_________________________________\n");
-        printw("  1   2   3   4   5   6   7   8  \n"); 
+        printw("_________________________\n");
+        printw(" 1  2  3  4  5  6  7  8  \n"); 
     }
     else{
-        printw("_________________________________________\n");
-        printw("  1   2   3   4   5   6   7   8   9  10 \n");
+        printw("______________________________\n");
+        printw("  1  2  3  4  5  6  7  8  9 10 \n");
     }
     refresh();
 
@@ -211,7 +217,7 @@ void gravite(int tableau[lign][colo]){
     for(int k=0;k<(lign-1);k++){
         for(int i=0;i<colo;i++){
             for(int f=lign-1;f!=0;f--){
-                if(tableau[f][i]==32 && tableau[f-1][i]!=32 && tableau[f-1][i]!='#'){
+                if(tableau[f][i]==32 && tableau[f-1][i]!=32 && tableau[f-1][i]!=0x2B1B){
                 tableau[f][i] = tableau[f-1][i];
                 tableau[f-1][i]=32;}
         }
@@ -230,10 +236,10 @@ void creation_tableau(int tableau[lign][colo]){
             tableau[i][j] = ' ';
         }
     }
-    tableau[0][0]='#';
-    tableau[0][colo-1]='#';
-    tableau[lign-1][0]='#';
-    tableau[lign-1][colo-1]='#';
+    tableau[0][0]=0x2B1B;
+    tableau[0][colo-1]=0x2B1B;
+    tableau[lign-1][0]=0x2B1B;
+    tableau[lign-1][colo-1]=0x2B1B;
 }
 
 void creation_tableau_jeton(int cotab_jeton[colo]){
@@ -245,7 +251,7 @@ void creation_tableau_jeton(int cotab_jeton[colo]){
 void affichage_tableau_jeton(int cotab_jeton[colo], int co_jeton){
     cotab_jeton[co_jeton]='^';
     for(int i=0;i<colo;i++){
-        printw("  %c ",cotab_jeton[i]);
+        printw("  %c",cotab_jeton[i]);
     }
     refresh();
 }
@@ -307,21 +313,29 @@ void deplacement_rota(int tab[lign][colo],int ch_rota,int *x,int *y,int *m,int d
 }
 
 void affichage_rota(int tab[lign][colo],int coo_x,int coo_y,int dim){
-    printw("\n");
+    //printw("\n");
     for (int i = 0; i < lign; i++) {
     //printw("%d  ",i+1);
         for (int j = 0; j < colo; j++) {
             if(i>=coo_x && i<coo_x+dim && j>=coo_y && j<coo_y+dim){
                 printw("|");
                 attron(A_REVERSE);
-                printw(" %lc ",tab[i][j]);
+                if(tab[i][j]==' '){
+                    printw("  ");}
+                else{
+                    printw("%lc",tab[i][j]);
+                }
                 attroff(A_REVERSE);
             }
-            else{printw("| %lc ", tab[i][j]);}
-        }
-    printw("|\n");
+            else{
+                if(tab[i][j]==' '){
+                    printw("|  ");}
+                else{
+                    printw("|%lc", tab[i][j]);}
+            }
     } 
-}
+    printw("|\n");
+}}
 
 void creation_choix_rota(int tab_choix_rota[1]){
     tab_choix_rota[0]='>';
@@ -352,7 +366,7 @@ void deplacement_choix_rota(int tab_choix_rota[1],int ch_choix_rota,int *coo_cho
 }
 
 void affichage_choix_rota(int tab_choix_rota[1]){
-    printw("%c à gauche\n%c a droite",tab_choix_rota[0],tab_choix_rota[1]);
+    printw("%c à gauche\n%c à droite",tab_choix_rota[0],tab_choix_rota[1]);
 }
 
 
@@ -361,7 +375,7 @@ int main(){
     setlocale(LC_ALL, "");
     int jeton = 0x274C;
     int taille_grille =1;
-    int nb_joueur = 2;
+    int nb_joueur = 3;
     int ch_jeton;
 
     initscr();
@@ -536,9 +550,9 @@ int main(){
             if(jeton== 0x274C){jeton=0x2B55;}
             else{jeton= 0x274C;}};
         if(nb_joueur==3){
-            if(jeton=='X'){jeton='+';}
-            else if(jeton=='+'){jeton='O';}
-            else {jeton='X';}
+            if(jeton==0x274C){jeton=0x0001F534;}
+            else if(jeton==0x0001F534){jeton=0x2B55;}
+            else {jeton=0x274C;}
         }
     }
     endwin();
