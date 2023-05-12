@@ -395,6 +395,20 @@ void affichage_choix_rota(int tab_choix_rota[1]){
     //printw("prout")
 }
 
+int match_nul(int tab[lign][colo]){
+    int draw=0;
+    for(int i=0;i<colo;i++){
+        if(tab[0][i]==' '){
+            draw++;
+        }
+    }
+    if(draw){
+        return 0;
+    }
+    else{
+        return 1;
+    }
+}
 
 
 int main(){
@@ -403,7 +417,7 @@ int main(){
     setlocale(LC_ALL, "");
     int jeton = 0x0001F535;
     int taille_grille =1;
-    int nb_joueur = 2;
+    int nb_joueur = 3;
     int ch_jeton;
 
     initscr();
@@ -427,6 +441,7 @@ int main(){
     creation_tableau(tableau);
     afficher_grille(tableau);
     int co_jeton=0;
+    int draw;
 
 
     /*while (caca)
@@ -446,6 +461,8 @@ int main(){
     }*/
 
     while (!gagnant) {
+
+        draw=0;
 
         
         int cotab_jeton[colo];
@@ -586,6 +603,14 @@ int main(){
             else if(jeton==0x0001F7E2){jeton=0x0001F7E1;}
             else {jeton=0x0001F535;}
         }
+        if(match_nul(tableau)){
+            draw++;
+            break;
+        }
+    }
+    if(draw){
+        printw("match nul\n");
+        sleep(10);
     }
     endwin();
     exit(0);
