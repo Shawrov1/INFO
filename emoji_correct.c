@@ -103,14 +103,29 @@ void afficher_grille(int grille[lign][colo]) {
         }
         printw("|\n");
     }
-    if(colo==8){
+
+    for(int i=0;i<colo;i++){
+        printw("___");
+    }
+    printw("_\n");
+    for(int i=0;i<colo;i++){
+        if(i>8){
+            printw(" %d",i+1);
+        }
+        else{
+            printw("  %d",i+1);
+        }
+    }
+    printw("\n");
+    /*if(colo==8){
+        
         printw("_________________________\n");
         printw("  1  2  3  4  5  6  7  8  \n"); 
     }
     else{
         printw("______________________________\n");
         printw("  1  2  3  4  5  6  7  8  9 10 \n");
-    }
+    }*/
     refresh();
 
 }
@@ -642,7 +657,9 @@ int main(){
         }
     }
     if(draw){
+        clear();
         printw("match nul\n");
+        refresh();
         sleep(10);
     }
     endwin();
