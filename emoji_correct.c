@@ -167,7 +167,7 @@ int jouer_coup(int grille[lign][colo], int colonne, int jeton) {
 }
 
 // Vérifier s'il y a un gagnant
-int verifier_gagnant(int grille[lign][colo], int jeton) {
+int verifier_gagnant(int grille[lign][colo], int jeton,int indices_gagnants[5][2]) {
     // Vérifier les lignes
     for (int i = 0; i < lign; i++) {
         for (int j = 0; j <= colo - WIN_LENGTH; j++) {
@@ -178,6 +178,12 @@ int verifier_gagnant(int grille[lign][colo], int jeton) {
                 }
             }
             if (k == WIN_LENGTH) {
+                // Stocker les indices des jetons gagnants
+                for (int l = 0; l < WIN_LENGTH; l++) {
+                    indices_gagnants[l][0] = i;
+                    indices_gagnants[l][1] = j+l;
+                }
+
                 return jeton;
             }
         }}
@@ -192,6 +198,11 @@ for (int i = 0; i <= lign - WIN_LENGTH; i++) {
             }
         }
         if (k == WIN_LENGTH) {
+            // Stocker les indices des jetons gagnants
+            for (int l = 0; l < WIN_LENGTH; l++) {
+                indices_gagnants[l][0] = i+l;
+                indices_gagnants[l][1] = j;
+            }
             return jeton;
         }
     }
@@ -207,6 +218,11 @@ for (int i = WIN_LENGTH - 1; i < lign; i++) {
             }
         }
         if (k == WIN_LENGTH) {
+            // Stocker les indices des jetons gagnants
+            for (int l = 0; l < WIN_LENGTH; l++) {
+                indices_gagnants[l][0] = i-l;
+                indices_gagnants[l][1] = j+l;
+            }
             return jeton;
         }
     }
@@ -222,6 +238,11 @@ for (int i = WIN_LENGTH - 1; i < lign; i++) {
             }
         }
         if (k == WIN_LENGTH) {
+            // Stocker les indices des jetons gagnants
+            for (int l = 0; l < WIN_LENGTH; l++) {
+                indices_gagnants[l][0] = i-l;
+                indices_gagnants[l][1] = j-l;
+            }
             return jeton;
         }
     }
@@ -448,13 +469,14 @@ void tab_copy(int tab[lign][colo],int tab2[lign][colo]){
 }
 
 
+
 int main(){
     
 
     setlocale(LC_ALL, "");
     int jeton = 0x0001F535;
     int taille_grille =1;
-    int nb_joueur = 3;
+    int nb_joueur = 2;
     int ch_jeton;
 
     initscr();
@@ -477,6 +499,7 @@ int main(){
     int tableau[lign][colo];
     int tab_rota[lign][colo];
 
+    int indices_gagnants[5][2];
 
     creation_tableau(tableau);
     afficher_grille(tableau);
@@ -584,7 +607,7 @@ int main(){
 
 
 
-            gagnant = verifier_gagnant(tableau, jeton);
+            gagnant = verifier_gagnant(tableau, jeton,indices_gagnants);
         }
         else{
             continue;
@@ -661,6 +684,14 @@ int main(){
         printw("match nul\n");
         refresh();
         sleep(10);
+    }
+    if(gagnant){
+        printw("\nil y un gagnant\n");
+        for (int i = 0; i < 5; i++){
+            printw("(%d, %d)\n", indices_gagnants[i][0], indices_gagnants[i][1]);    
+        }
+        refresh();
+        sleep(20);
     }
     endwin();
     exit(0);
